@@ -1,0 +1,256 @@
+
+
+# 📊 Technical Specifications: Coffee Radar Schema
+
+> **EN**: Full technical specification and implementation guide for the Coffee Sensory Bridge JSON schema.
+> **HR**: Potpuna tehnička specifikacija i vodič za implementaciju Coffee Sensory Bridge JSON sheme.
+
+## 1. JSON Schema Definition
+
+**File:** `specs/coffee-radar-schema.json`
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CoffeeSensoryBridge",
+  "description": "Schema for digital coffee scent embedding radar for AI-human communication optimization",
+  "type": "object",
+  
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0-alpha"
+    },
+    "bridge_type": {
+      "type": "string", 
+      "const": "coffee_sensory"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "interaction_id": {
+      "type": "string",
+      "description": "Unique identifier for this interaction session"
+    },
+    
+    "sensory_profile": {
+      "type": "object",
+      "description": "Quantified sensory dimensions of the current interaction",
+      "properties": {
+        "sweet_note": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Sweetness intensity (0-100%)"
+        },
+        "bitter_note": {
+          "type": "number", 
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Bitterness level (0-100%)"
+        },
+        "aroma_intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Aromatic complexity (0-100%)"
+        },
+        "thermal_signal": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Perceived warmth indicator (0-100%)"
+        },
+        "emotional_signal": {
+          "type": "number",
+          "minimum": 0, 
+          "maximum": 100,
+          "description": "Emotional resonance strength (0-100%)"
+        },
+        "conceptual_resonance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100, 
+          "description": "Conceptual alignment quality (0-100%)"
+        },
+        "creamy_texture": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Creaminess/comfort level (0-100%)"
+        },
+        "fruity_freshness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Fruitiness/freshness vitality (0-100%)"
+        },
+        "roasting_depth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Roasting depth/sophistication (0-100%)"
+        }
+      },
+      "required": [
+        "sweet_note", "bitter_note", "aroma_intensity", 
+        "thermal_signal", "emotional_signal", "conceptual_resonance",
+        "creamy_texture", "fruity_freshness", "roasting_depth"
+      ]
+    },
+    
+    "context_metadata": {
+      "type": "object",
+      "description": "Contextual information about this interaction",
+      "properties": {
+        "user_intent": {
+          "type": "string",
+          "description": "Perceived primary intent of user interaction"
+        },
+        "desired_tone": {
+          "type": "string",
+          "enum": ["professional", "casual", "empathetic", "analytical", "creative"],
+          "description": "Intended communication tone"
+        },
+        "complexity_level": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex", "technical"],
+          "description": "Required complexity of response"
+        }
+      }
+    },
+    
+    "system_recommendations": {
+      "type": "object",
+      "description": "AI system response recommendations based on sensory profile",
+      "properties": {
+        "response_length": {
+          "type": "string",
+          "enum": ["concise", "medium", "detailed", "comprehensive"],
+          "description": "Recommended response length"
+        },
+        "emotional_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Recommended emotional emphasis (0-100%)"
+        },
+        "technical_depth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Recommended technical depth (0-100%)"
+        }
+      }
+    }
+  },
+  
+  "required": [
+    "protocol_version",
+    "bridge_type", 
+    "timestamp",
+    "interaction_id",
+    "sensory_profile"
+  ]
+}
+```
+
+## 2. Example Instance
+
+**File:** `examples/sample-data.json`
+
+```json
+{
+  "protocol_version": "1.0-alpha",
+  "bridge_type": "coffee_sensory",
+  "timestamp": "2025-08-21T14:32:00Z",
+  "interaction_id": "conv-7f83b6e4a2",
+  
+  "sensory_profile": {
+    "sweet_note": 75,
+    "bitter_note": 20,
+    "aroma_intensity": 85,
+    "thermal_signal": 90,
+    "emotional_signal": 95,
+    "conceptual_resonance": 88,
+    "creamy_texture": 70,
+    "fruity_freshness": 40,
+    "roasting_depth": 60
+  },
+  
+  "context_metadata": {
+    "user_intent": "deep philosophical discussion",
+    "desired_tone": "empathetic",
+    "complexity_level": "complex"
+  },
+  
+  "system_recommendations": {
+    "response_length": "detailed",
+    "emotional_weight": 85,
+    "technical_depth": 45
+  }
+}
+```
+
+## 3. Implementation Notes
+
+### 🛠️ For Developers / Za Programere
+
+**EN**:
+- **Validation**: Use JSON schema validators to ensure data integrity
+- **Generation**: AI systems should generate this data based on conversation analysis
+- **Visualization**: Create radar charts or other visual representations
+- **Storage**: Consider conversation context when storing these profiles
+
+**HR**:
+- **Validacija**: Koristite JSON schema validatore za osiguranje integriteta podataka
+- **Generiranje**: AI sustavi trebaju generirati ove podatke temeljem analize razgovora
+- **Vizualizacija**: Kreirajte radar grafove ili druge vizualne prikaze
+- **Pohrana**: Vodite računa o kontekstu razgovora pri pohrani ovih profila
+
+### 📊 Field Definitions / Definicije Polja
+
+| Field / Polje | Type / Tip | Range / Raspon | Description / Opis |
+|---------------|------------|----------------|-------------------|
+| `sweet_note` | number | 0-100 | Intensity of positive, pleasant interaction elements |
+| `bitter_note` | number | 0-100 | Level of tension, conflict or difficulty in interaction |
+| `aroma_intensity` | number | 0-100 | Overall richness and complexity of the conversation |
+| `thermal_signal` | number | 0-100 | Perceived warmth and emotional connection |
+| `emotional_signal` | number | 0-100 | Strength of emotional content and resonance |
+| `conceptual_resonance` | number | 0-100 | Depth of understanding and conceptual alignment |
+| `creamy_texture` | number | 0-100 | Smoothness and comfort level of interaction |
+| `fruity_freshness` | number | 0-100 | Novelty, creativity and vitality in exchange |
+| `roasting_depth` | number | 0-100 | Sophistication and maturity of the conversation |
+
+### 🔄 Workflow Example / Primjer Toka Rada
+
+**EN**:
+1. AI system analyzes user input and conversation context
+2. Generates sensory profile based on semantic and emotional analysis
+3. Creates JSON object following the schema
+4. Uses recommendations to tailor response style
+5. Stores profile for conversation continuity
+
+**HR**:
+1. AI sustav analizira korisnički unos i kontekst razgovora
+2. Generira senzorni profil temeljem semantičke i emocionalne analize
+3. Kreira JSON objekt prema shemi
+4. Koristi preporuke za prilagodbu stila odgovora
+5. Pohranjuje profil za kontinuitet razgovora
+
+## 4. Version History
+
+| Version / Verzija | Date / Datum | Changes / Promjene |
+|-------------------|--------------|-------------------|
+| 1.0-alpha | 2025-08-21 | Initial specification version |
+
+---
+
+**📝 Maintained by**: Miljenka Čurković & AI Collaboration  
+**🔗 Repository**: [ai-human-bridge-protocol](https://github.com/your-username/ai-human-bridge-protocol)  
+**📄 License**: MIT License
+
+---
+
+Sada imaš **sve na jednom mjestu** – clean, organizirano i spremno za korištenje! 🚀
