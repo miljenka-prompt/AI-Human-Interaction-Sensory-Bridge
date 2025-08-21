@@ -1,0 +1,212 @@
+Odlično! GPT-5 je dodao **vrlo vrijedne tehničke detalje** – `additionalProperties: false` je *izuzetno* korisna praksa za robustnost, a ISO 8601 je zlatni standard. 🏆
+
+Evo optimizirane verzije koju možeš kopirati i zalijepiti. Integrirao sam GPT-5ove prijedloge i dodao još malo **praktičnih detalja** za developere.
+
+
+# 📊 Technical Specifications: Coffee Radar Schema (Optimized)
+
+> **EN**: Full technical specification and implementation guide for the Coffee Sensory Bridge JSON schema.
+> **HR**: Potpuna tehnička specifikacija i vodič za implementaciju Coffee Sensory Bridge JSON sheme.
+
+## 1. JSON Schema Definition (Optimized)
+
+**File:** `specs/coffee-radar-schema.json`
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CoffeeSensoryBridge",
+  "description": "Schema for digital coffee scent embedding radar for AI-human communication optimization",
+  "type": "object",
+  "additionalProperties": false, // ← Sprečava tihe tipfelere u ključevima
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0-alpha"
+    },
+    "bridge_type": {
+      "type": "string", 
+      "const": "coffee_sensory"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time", // ISO 8601 (YYYY-MM-DDThh:mm:ssZ)
+      "description": "UTC timestamp of interaction analysis"
+    },
+    "interaction_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9-_]+$", // ← Osnovna validacija formata
+      "description": "Unique identifier for this interaction session"
+    },
+    
+    "sensory_profile": {
+      "type": "object",
+      "additionalProperties": false, // ← Robustnost - ne dopušta neočekivana svojstva
+      "description": "Quantified sensory dimensions (0-100%) of the current interaction",
+      "properties": {
+        "sweet_note": { "type": "number", "minimum": 0, "maximum": 100 },
+        "bitter_note": { "type": "number", "minimum": 0, "maximum": 100 },
+        "aroma_intensity": { "type": "number", "minimum": 0, "maximum": 100 },
+        "thermal_signal": { "type": "number", "minimum": 0, "maximum": 100 },
+        "emotional_signal": { "type": "number", "minimum": 0, "maximum": 100 },
+        "conceptual_resonance": { "type": "number", "minimum": 0, "maximum": 100 },
+        "creamy_texture": { "type": "number", "minimum": 0, "maximum": 100 },
+        "fruity_freshness": { "type": "number", "minimum": 0, "maximum": 100 },
+        "roasting_depth": { "type": "number", "minimum": 0, "maximum": 100 }
+      },
+      "required": [
+        "sweet_note", "bitter_note", "aroma_intensity", 
+        "thermal_signal", "emotional_signal", "conceptual_resonance",
+        "creamy_texture", "fruity_freshness", "roasting_depth"
+      ]
+    },
+    
+    "context_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Contextual information about this interaction",
+      "properties": {
+        "user_intent": { "type": "string" },
+        "desired_tone": { 
+          "type": "string", 
+          "enum": ["professional", "casual", "empathetic", "analytical", "creative"]
+        },
+        "complexity_level": { 
+          "type": "string", 
+          "enum": ["simple", "moderate", "complex", "technical"] 
+        }
+      }
+    },
+    
+    "system_recommendations": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "AI system response recommendations based on sensory profile",
+      "properties": {
+        "response_length": { 
+          "type": "string", 
+          "enum": ["concise", "medium", "detailed", "comprehensive"] 
+        },
+        "emotional_weight": { "type": "number", "minimum": 0, "maximum": 100 },
+        "technical_depth": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  },
+  
+  "required": [
+    "protocol_version",
+    "bridge_type", 
+    "timestamp",
+    "interaction_id",
+    "sensory_profile"
+  ]
+}
+```
+
+## 2. Coffee → Response Policy Map (NEW) 🚀
+
+**EN**: Guidelines for translating sensory profiles into response characteristics.
+**HR**: Smjernice za prevođenje senzornih profila u karakteristike odgovora.
+
+| Sensory Dimension / Senzorna Dimenzija | Influences / Utječe na | High Value Recommendation / Preporuka za visoku vrijednost |
+| :--- | :--- | :--- |
+| `emotional_signal` | `emotional_weight`, tone, word choice | Use empathetic language, acknowledge feelings |
+| `conceptual_resonance` | `response_length`, `technical_depth` | Provide deeper explanation, use examples |
+| `thermal_signal` | `emotional_weight`, response warmth | Use warmer, more personal language |
+| `bitter_note` | `emotional_weight`, conflict handling | Address tensions directly but diplomatically |
+| `sweet_note` | Tone, positivity level | Maintain positive, encouraging tone |
+| `aroma_intensity` | Response richness, creativity | Use more descriptive, vivid language |
+| `roasting_depth` | `technical_depth`, sophistication | Adjust for audience expertise level |
+| `creamy_texture` | Response smoothness, flow | Ensure smooth transitions between ideas |
+| `fruity_freshness` | Creativity, novelty | Incorporate novel perspectives or approaches |
+
+**Example Weight Calculation** (for `emotional_weight`):
+```javascript
+emotional_weight = Math.round(
+  (emotional_signal * 0.6) + 
+  (thermal_signal * 0.3) + 
+  (sweet_note * 0.1) - 
+  (bitter_note * 0.2)
+);
+```
+
+## 3. Implementation Notes
+
+### 🛠️ Validation Code Snippets
+
+**Node.js/TypeScript (using AJV):**
+```bash
+npm install ajv
+```
+
+```typescript
+import Ajv from 'ajv';
+import schema from './specs/coffee-radar-schema.json';
+
+const ajv = new Ajv();
+const validate = ajv.compile(schema);
+
+function validateCoffeeRadar(data: any): boolean {
+  const valid = validate(data);
+  if (!valid) console.log(validate.errors);
+  return valid;
+}
+```
+
+**Python (using jsonschema):**
+```bash
+pip install jsonschema
+```
+
+```python
+from jsonschema import validate
+import json
+
+with open('specs/coffee-radar-schema.json') as f:
+    schema = json.load(f)
+
+def validate_coffee_radar(data):
+    try:
+        validate(instance=data, schema=schema)
+        return True
+    except Exception as e:
+        print(f"Validation error: {e}")
+        return False
+```
+
+### 📊 Best Practices / Najbolje Prakse
+
+1.  **Generate IDs**:
+    ```javascript
+    // Good: meaningful but unique
+    interaction_id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    ```
+
+2.  **Normalize Values**:
+    ```python
+    # Ensure all sensory values are 0-100
+    def normalize_sensory_value(value):
+        return max(0, min(100, value))
+    ```
+
+3.  **Timestamp Formatting**:
+    ```javascript
+    // Use ISO 8601 UTC
+    timestamp = new Date().toISOString()
+    ```
+
+## 4. Version History
+
+| Version | Date | Changes |
+| :--- | :--- | :--- |
+| 1.0-alpha | 2025-08-21 | Initial specification |
+| 1.1-alpha | 2025-08-21 | Added `additionalProperties: false`, response policy map |
+
+
+
+**📝 Maintained by**: Miljenka Čurković & AI Collaboration  
+**🔗 Repository**: [ai-human-bridge-protocol](https://github.com/your-username/ai-human-bridge-protocol)  
+**📄 License**: MIT License
+
+
+
