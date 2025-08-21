@@ -1,0 +1,278 @@
+
+specs/coffee-radar-schema.json
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CoffeeSensoryBridge",
+  "description": "Schema for digital coffee scent embedding radar for AI-human communication optimization",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "const": "1.0-alpha"
+    },
+    "bridge_type": {
+      "type": "string",
+      "const": "coffee_sensory"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "interaction_id": {
+      "type": "string",
+      "description": "Unique identifier for this interaction session"
+    },
+    "sensory_profile": {
+      "type": "object",
+      "description": "Quantified sensory dimensions of the current interaction",
+      "properties": {
+        "sweet_note": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Sweetness intensity (0-100%)"
+        },
+        "bitter_note": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Bitterness level (0-100%)"
+        },
+        "aroma_intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Aromatic complexity (0-100%)"
+        },
+        "thermal_signal": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Perceived warmth indicator (0-100%)"
+        },
+        "emotional_signal": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Emotional resonance strength (0-100%)"
+        },
+        "conceptual_resonance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Conceptual alignment quality (0-100%)"
+        },
+        "creamy_texture": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Creaminess/comfort level (0-100%)"
+        },
+        "fruity_freshness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Fruitiness/freshness vitality (0-100%)"
+        },
+        "roasting_depth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Roasting depth/sophistication (0-100%)"
+        }
+      },
+      "required": [
+        "sweet_note",
+        "bitter_note",
+        "aroma_intensity",
+        "thermal_signal",
+        "emotional_signal",
+        "conceptual_resonance",
+        "creamy_texture",
+        "fruity_freshness",
+        "roasting_depth"
+      ],
+      "additionalProperties": false
+    },
+    "context_metadata": {
+      "type": "object",
+      "description": "Contextual information about this interaction",
+      "properties": {
+        "user_intent": {
+          "type": "string",
+          "description": "Perceived primary intent of user interaction"
+        },
+        "desired_tone": {
+            "type": "string",
+            "enum": ["professional", "casual", "empathetic", "analytical", "creative"],
+            "description": "Intended communication tone"
+        },
+        "complexity_level": {
+            "type": "string",
+            "enum": ["simple", "moderate", "complex", "technical"],
+            "description": "Required complexity of response"
+        }
+      },
+      "additionalProperties": false
+    },
+    "system_recommendations": {
+      "type": "object",
+      "description": "AI system response recommendations based on sensory profile",
+      "properties": {
+        "response_length": {
+          "type": "string",
+          "enum": ["concise", "medium", "detailed", "comprehensive"],
+          "description": "Recommended response length"
+        },
+        "emotional_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Recommended emotional emphasis (0-100%)"
+        },
+        "technical_depth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Recommended technical depth (0-100%)"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "protocol_version",
+    "bridge_type",
+    "timestamp",
+    "interaction_id",
+    "sensory_profile"
+  ],
+  "additionalProperties": false
+}
+
+
+examples/sample-data.json
+
+{
+  "protocol_version": "1.0-alpha",
+  "bridge_type": "coffee_sensory",
+  "timestamp": "2025-08-21T14:32:00Z",
+  "interaction_id": "conv-7f83b6e4a2",
+  "sensory_profile": {
+    "sweet_note": 75,
+    "bitter_note": 20,
+    "aroma_intensity": 85,
+    "thermal_signal": 90,
+    "emotional_signal": 95,
+    "conceptual_resonance": 88,
+    "creamy_texture": 70,
+    "fruity_freshness": 40,
+    "roasting_depth": 60
+  },
+  "context_metadata": {
+    "user_intent": "deep philosophical discussion",
+    "desired_tone": "empathetic",
+    "complexity_level": "complex"
+  },
+  "system_recommendations": {
+    "response_length": "detailed",
+    "emotional_weight": 85,
+    "technical_depth": 45
+  }
+}
+
+
+tools/validate_coffee_profile.py  (Python validator – koristi jsonschema)
+
+#!/usr/bin/env python3
+import json, sys
+from jsonschema import validate, Draft7Validator
+
+def load(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def main(schema_path, instance_path):
+    schema = load(schema_path)
+    instance = load(instance_path)
+
+    v = Draft7Validator(schema)
+    errors = sorted(v.iter_errors(instance), key=lambda e: e.path)
+
+    if errors:
+        print("❌ Validation errors:")
+        for e in errors:
+            loc = "/".join([str(p) for p in e.path]) or "(root)"
+            print(f" - at {loc}: {e.message}")
+        sys.exit(1)
+    else:
+        print("✅ Instance is valid against schema.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python tools/validate_coffee_profile.py specs/coffee-radar-schema.json examples/sample-data.json")
+        sys.exit(2)
+    main(sys.argv[1], sys.argv[2])
+
+Install & run:
+
+pip install jsonschema
+python tools/validate_coffee_profile.py specs/coffee-radar-schema.json examples/sample-data.json
+
+
+
+
+Optional/Opcionalno tools/plot_coffee_radar.py  – radar graf bez vanjskih stilova/radar graph without external styles
+
+#!/usr/bin/env python3
+import json, math, sys
+import matplotlib.pyplot as plt
+
+FIELDS = [
+    ("sweet_note", "Sweet"),
+    ("bitter_note", "Bitter"),
+    ("aroma_intensity", "Aroma"),
+    ("thermal_signal", "Thermal"),
+    ("emotional_signal", "Emotional"),
+    ("conceptual_resonance", "Conceptual"),
+    ("creamy_texture", "Creamy"),
+    ("fruity_freshness", "Fruity"),
+    ("roasting_depth", "Roast")
+]
+
+def main(instance_path):
+    with open(instance_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    sp = data["sensory_profile"]
+
+    values = [sp[k] for k,_ in FIELDS]
+    labels = [lbl for _,lbl in FIELDS]
+
+    # Radar prep
+    N = len(values)
+    angles = [n / float(N) * 2 * math.pi for n in range(N)]
+    values += values[:1]
+    angles += angles[:1]
+
+    fig, ax = plt.subplots(figsize=(7,7), subplot_kw=dict(polar=True))
+    ax.plot(angles, values, linewidth=2)
+    ax.fill(angles, values, alpha=0.2)
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels)
+    ax.set_yticklabels([])
+    ax.set_title("Digital Coffee Scent Embedding Radar")
+    fig.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    path = sys.argv[1] if len(sys.argv) > 1 else "examples/sample-data.json"
+    main(path)
+
+Run:
+
+python tools/plot_coffee_radar.py examples/sample-data.json
+
+
+
+
